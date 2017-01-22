@@ -1,7 +1,3 @@
 <?php
 
-$app->get('/test', function() {
-
-    echo 'test';
-
-});
+$app->get('/', 'PageController:getIndex')->setName('index');
