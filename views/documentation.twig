@@ -1,0 +1,34 @@
+{% extends 'default.twig' %}
+
+{% block title %}Documentation{% endblock %}
+
+{% block content %}
+    <h1>Dokumentation</h1>
+    <p>
+        Für dieses Projekt wurden folgende Librarys und Frameworks verwendet:
+    </p>
+    <ul>
+        <li>Bootstrap Version 4</li>
+        <li>PHP Slim Framework</li>
+        <li>Monolog Logger Library</li>
+        <li>Twig Views</li>
+        <li>Eloquent Datenbank ORM</li>
+        <li>PHPMailer Library</li>
+        <li>Vlucas Valitron Validator Library</li>
+        <li>Bootbox.js</li>
+    </ul>
+    <p>
+        Da dies PHP Code ist, muss dieser auch dementsprechend von einem Interpreter interpretiert werden. Daher
+        ist es nötig, dass dieser Code auf einem PHP Server läuft. Als Beispiel käme das XAMPP in Frage. Zusätzlich
+        muss noch die Datenbank mit dem SQL-Dump erstellt werden (siehe im Ordner /db/db.sql).
+    </p>
+    <p>
+        Im Ordner /app findet man eine "config.php". In diesem File sind alle Konfiguration für die Datenbank enthalten.
+        Wenn man die "Passwort-Vergessen" Funktionalität zum Laufen bringen möchte, muss man zusätzlich noch eine eine
+        E-Mail Konfiguration angegeben werden.
+    </p>
+    <p>
+        Wenn man die Applikation öffnen möchte, muss man "http://localhost/m183/public" im Browser aufrufen. Also den /public
+        Ordner.
+    </p>
+{% endblock %}

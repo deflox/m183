@@ -29,7 +29,7 @@ return [
         "username" => "",
         "password" => "",
         "secure" => "",
-        "port" => ,
+        "port" => "",
     ],
 
 ];

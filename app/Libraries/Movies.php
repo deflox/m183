@@ -42,6 +42,7 @@ class Movies extends Accessor
 
         if (!$movie->save()) {
             $this->error = "Unknown error occured";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return false;
         }
 
@@ -77,6 +78,7 @@ class Movies extends Accessor
 
         if (!isset($movie)) {
             $this->error = "This movie does not belong to you.";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return false;
         }
 

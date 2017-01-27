@@ -21,6 +21,7 @@ class PageController extends Accessor
      */
     public function getIndex($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
         if (!$this->authSecure->isUserAuthenticated()) {
             return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
         } else {
@@ -37,7 +38,8 @@ class PageController extends Accessor
      */
     public function getDocumentation($req, $res)
     {
-        return null;
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+        return $this->view->render($res, 'documentation.twig');
     }
 
     /**
@@ -49,6 +51,7 @@ class PageController extends Accessor
      */
     public function getJournal($req, $res)
     {
-        return null;
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+        return $this->view->render($res, 'journal.twig');
     }
 }

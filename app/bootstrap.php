@@ -65,6 +65,20 @@ $container['db'] = function() use ($capsule) {
 };
 
 /*
+ * Logger
+ * ---------------------------------------
+ */
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+$logger = new Logger('logger');
+$logger->pushHandler(new StreamHandler(__DIR__ . '/../logs/log.log'));
+
+$container['log'] = function($c) use($logger) {
+    return $logger;
+};
+
+/*
  * Controllers
  * ---------------------------------------
  */
@@ -102,6 +116,9 @@ $container['movies'] = function($c) {
 };
 $container['api'] = function($c) {
     return new App\Libraries\API($c);
+};
+$container['logger'] = function($c) {
+    return new App\Libraries\Logger($c);
 };
 
 /*

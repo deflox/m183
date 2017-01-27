@@ -1,0 +1,68 @@
+{% extends 'default.twig' %}
+
+{% block title %}Journal{% endblock %}
+
+{% block content %}
+    <h1>Arbeitsprotkoll</h1>
+    <h3>02. Dez. 2016</h3>
+    <p>
+        Habe mir Gedanken gemacht, was genau ich machen möchte. Da ich ziemlich viele Filme schaue, hatte ich die Idee,
+        dass einen Filmmanager als "Beispielsapplikation" erstellen. Man soll sich registrieren können und einloggen können.
+        Jeder User kann dann für sich selbst Filme hinzufügen und entfernen.<br>
+        <br>
+        Heute habe ich also schon einmal angefangen die Projektstruktur zu erstellen.
+    </p>
+    <h3>09. Dez. 2016</h3>
+    <p>
+        Heute habe ich die ganze Zeit damit verbracht die Projektstruktur aufzubauen. Da das Projekt mit dem Slim Framework erstellen
+        möchte muss ich die ganzen Dependencies mit Composer holen. Dazu gehört auch noch eine Projektstruktur, wobei es
+        üblicherweise einen "public" Ordner gibt, in welchem alle File liegen die öffentlich zugänglich sind, sowie einen
+        "app" und einen "views" Ordner, mit Dateien welche nicht öffentlich zugänglich sein sollen.
+    </p>
+    <h3>16. Dez. 2016</h3>
+    <p>
+        Ich habe damit angefangen, die login Seiten zu erstellen. Zu jeder Login Seite habe ich noch zusätzlich eine Methode im
+        Controller erstellt, sowie eine zusätzliche Library, welche alle Authentifizierungsprozesse übernimmt. Ich hatte die
+        Idee, dass ich ein sicheres und ein unsicheres Login erstellen kann.
+    </p>
+    <h3>23. Dez. 2016</h3>
+    <p>
+        Ich habe heute die ganze Zeit verbracht, um das sichere Login zu erstellen. Damit es so sicher wie nur möglich ist, habe ich
+        auch noch eine Limite bei den Versuchen eingebaut. Wenn der Nutzer mehr als drei falsche Loginversuche hat, muss er fünf
+        Minuten warten, bis er es nochmals versuchen kann.
+    </p>
+    <h3>13. Jan. 2017</h3>
+    <p>
+        Heute habe ich für das sichere Login eine "Passwort vergessen" Funktionalität eingebaut. Wenn der Nutzer sein Passwort vergessen hat,
+        kann er seine E-Mail-Adresse im dazugehörigen Feld eingeben und es wird ein E-Mail mit einem Reset-Link versendet. Um das E-Mail
+        zu versenden, benutze ich die PHPMailer Library und meinen eigenen Mailserver um die Mails zu versenden.
+    </p>
+    <h3>20. Jan. 2017</h3>
+    <p>
+        Beim Login läuft jetzt alles. Da ich noch die Filmliste-Funktionalität erstellen muss, habe ich mir gedacht, dass ich anstelle eines
+        unsicheren Logins einfach eine unsichere Version der Filmliste implementiere. Heute habe ich also angefangen den JavaScript-Teil im FrontEnd
+        zu erstellen, welcher die Ajax Call auf den Server macht.
+        <br>
+        <br>
+        Bei der unsicheren Variante der Filmliste soll es möglich sein, JavaScript code auf der Website auszuführen. Zusätzlich kann der Nutzer die
+        ID des Löschen-Button verändert, sodass dieser einen anderen Film löschen kann, der nicht ihm gehört.
+    </p>
+    <h3>26. Jan. 2017</h3>
+    <p>
+        Ich habe das Portfolio abgeschlossen und noch alle erforderlichen Funktionalitäten implementiert, sowie die Videos aufgenommen.
+    </p>
+    <h3>27. Jan. 2017</h3>
+    <p>
+        Heute muss ich noch das Journal fertig schreiben, sowie die einen Logger implementieren.
+    </p>
+    <h3>Schlussreflexion</h3>
+    <p>
+        Mit dem Resultat meines Projektes bin ich sehr zufrieden. Es ist das geworden, was ich mir vorgestellt habe. Jedoch habe ich die Zeit
+        ein wenig falsch eingeplant, sodass ich am Schluss ein wenig in den Stress gekommen bin. Ich habe bereits ziemlich viel Erfahrung mit PHP
+        somit war die Erstellung dieser Applikation reine Routine, lediglich einen Logger habe ich noch nie implementiert.
+        <br>
+        <br>
+        Als Fazit kann ich sagen, dass ich Spass hatte ein solches Projekt zu erstellen. Ich persönlich finde das viel besser als die Erarbeitung
+        von Aufgaben im Unterricht.
+    </p>
+{% endblock %}

@@ -1,6 +1,8 @@
 <?php
 
 $app->get('/', 'PageController:getIndex')->setName('index');
+$app->get('/documentation', 'PageController:getDocumentation')->setName('documentation');
+$app->get('/journal', 'PageController:getJournal')->setName('journal');
 
 /*
  * Movies Secure

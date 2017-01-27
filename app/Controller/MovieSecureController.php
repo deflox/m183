@@ -21,6 +21,7 @@ class MovieSecureController extends Accessor
      */
     public function getMoviesSecure($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
         return $this->view->render($res, 'moviesSecure.twig', [
             'movies' => $this->movies->getMoviesForUser($this->authSecure->getUserIdFromSession())
         ]);
@@ -35,6 +36,7 @@ class MovieSecureController extends Accessor
      */
     public function getMoviesInsecure($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
         return $this->view->render($res, 'moviesInsecure.twig', [
             'movies' => $this->movies->getMoviesForUser($this->authSecure->getUserIdFromSession())
         ]);
@@ -49,6 +51,7 @@ class MovieSecureController extends Accessor
      */
     public function addMovie($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
         $validation = $this->validation->validate($req, [
             'imdb_id|IMDb Id' => ['required'],
             'title|Title' => ['required', ['lengthMax', 255]],
@@ -78,6 +81,7 @@ class MovieSecureController extends Accessor
      */
     public function deleteMovieSecure($req, $res, $args)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
         if (!$this->movies->deleteSecure($args['id'], $this->authSecure->getUserIdFromSession())) {
             return $this->api->createErrorResponse($res, $this->movies->error());
         } else {
@@ -95,6 +99,7 @@ class MovieSecureController extends Accessor
      */
     public function deleteMovieInsecure($req, $res, $args)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
         if (!$this->movies->deleteInsecure($args['id'])) {
             return $this->api->createErrorResponse($res, $this->movies->error());
         } else {

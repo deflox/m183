@@ -63,12 +63,14 @@ class AuthSecure extends Accessor
             // Check if user exists
             if (!isset($user)) {
                 $this->error = "Your credentials are not correct. Please try again.";
+                $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
                 return false;
             }
 
             // Check password
             if (!password_verify($password, $user->password)) {
                 $this->error = "Your credentials are not correct. Please try again.";
+                $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
                 return false;
             }
 
@@ -86,6 +88,7 @@ class AuthSecure extends Accessor
         } else {
 
             $this->error = "There were already to many failed login attempts. Please wait ".$this->lockTime." minutes und try again.";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return false;
 
         }
@@ -180,6 +183,7 @@ class AuthSecure extends Accessor
 
         if (isset($user)) {
             $this->error = "There's already an user with the given email address.";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return false;
         }
 
@@ -191,6 +195,7 @@ class AuthSecure extends Accessor
 
         if (!$user->save()) {
             $this->error = "An unknown error occured.";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return false;
         }
 
@@ -211,6 +216,7 @@ class AuthSecure extends Accessor
 
         if (!$token->save()) {
             $this->error = "An unknown error occured.";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return '';
         }
 
@@ -231,12 +237,14 @@ class AuthSecure extends Accessor
 
         if (!isset($token)) {
             $this->error = "This link is invalid or expired.";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return false;
         }
 
         if ($this->checkTimeStampAge($token->created_at, 120)) {
             $this->deleteToken($token->id);
             $this->error = "This link is invalid or expired.";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return false;
         }
 
@@ -263,11 +271,13 @@ class AuthSecure extends Accessor
 
         if (!$update) {
             $this->error = "An unknown error occured.";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return false;
         }
 
         if (!$this->deleteToken($token->id)) {
             $this->error = "An unknown error occured.";
+            $this->logger->logValErr($this->error(), get_class($this), __FUNCTION__, __LINE__);
             return false;
         }
 

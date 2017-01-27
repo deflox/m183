@@ -22,6 +22,8 @@ class AuthSecureController extends Accessor
      */
     public function getSignIn($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+
         return $this->view->render($res, 'authSecure/signin.twig');
     }
 
@@ -34,6 +36,8 @@ class AuthSecureController extends Accessor
      */
     public function postSignIn($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+
         $validation = $this->validation->validate($req, [
             'email|E-Mail' => ['required', 'email'],
             'password|Password' => ['required']
@@ -60,6 +64,8 @@ class AuthSecureController extends Accessor
      */
     public function getSignUp($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+
         return $this->view->render($res, 'authSecure/signup.twig');
     }
 
@@ -72,6 +78,8 @@ class AuthSecureController extends Accessor
      */
     public function postSignUp($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+
         $validation = $this->validation->validate($req, [
             'name|Name' => ['required', ['lengthMax', 75]],
             'email|E-Mail' => ['required', 'email', ['lengthMax', 75]],
@@ -100,6 +108,8 @@ class AuthSecureController extends Accessor
      */
     public function getForgotPassword($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+
         return $this->view->render($res, 'authSecure/forgot.twig');
     }
 
@@ -112,6 +122,8 @@ class AuthSecureController extends Accessor
      */
     public function postForgotPassword($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+
         $validation = $this->validation->validate($req, [
             'forgot_email|E-Mail' => ['required', 'email']
         ]);
@@ -163,6 +175,8 @@ class AuthSecureController extends Accessor
      */
     public function getResetPassword($req, $res, $args)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+
         if (!$this->authSecure->checkToken($args['token'])) {
             $this->flash->addMessage('error', $this->authSecure->error());
             return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
@@ -182,6 +196,8 @@ class AuthSecureController extends Accessor
      */
     public function postResetPassword($req, $res, $args)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+
         if (!$this->authSecure->checkToken($args['token'])) {
             $this->flash->addMessage('error', $this->authSecure->error());
             return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
@@ -213,6 +229,8 @@ class AuthSecureController extends Accessor
      */
     public function getSignOut($req, $res)
     {
+        $this->logger->logMethod(get_class($this), __FUNCTION__, __LINE__);
+
         $this->authSecure->signOut();
         $this->flash->addMessage('success', 'Erfolgreich ausgeloggt.');
         return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
