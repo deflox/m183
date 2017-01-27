@@ -68,11 +68,17 @@ $container['db'] = function() use ($capsule) {
  * Controllers
  * ---------------------------------------
  */
-$container['AuthController'] = function($c) {
-    return new App\Controller\AuthController($c);
-};
 $container['PageController'] = function($c) {
     return new App\Controller\PageController($c);
+};
+$container['AuthSecureController'] = function($c) {
+    return new App\Controller\AuthSecureController($c);
+};
+$container['AuthInsecureController'] = function($c) {
+    return new App\Controller\AuthSecureController($c);
+};
+$container['MovieSecureController'] = function($c) {
+    return new App\Controller\MovieSecureController($c);
 };
 
 /*
@@ -91,6 +97,20 @@ $container['authInsecure'] = function($c) {
 $container['validation'] = function($c) {
     return new App\Libraries\Validation($c);
 };
+$container['movies'] = function($c) {
+    return new App\Libraries\Movies($c);
+};
+$container['api'] = function($c) {
+    return new App\Libraries\API($c);
+};
+
+/*
+ * Middleware
+ * ---------------------------------------
+ */
+$app->add(new App\Middleware\OldInputMiddleware($container));
+$app->add(new App\Middleware\ValidationErrorMiddleware($container));
+$app->add(new App\Middleware\ViewMiddleware($container));
 
 /*
  * Twig

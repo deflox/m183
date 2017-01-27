@@ -50,6 +50,7 @@ class Validation extends Accessor
         $v->labels($labels);
         $v->validate();
 
+        $_SESSION['errors'] = $v->errors();
         $this->errors = $v->errors();
 
         return $this;

@@ -7,15 +7,46 @@
 
     <title>{% block title %}{% endblock %}</title>
 
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:700">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+
     <!-- Styles -->
     <link rel="stylesheet" href="{{ base_url() }}assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ base_url() }}assets/css/tether.min.css">
+    <link rel="stylesheet" href="{{ base_url() }}assets/css/app.css">
 
 </head>
 <body>
-{% block content %}{% endblock %}
+    <div class="container">
+        <div class="row" id="wrapper">
+            <div class="col-3" id="menu">
+                <h1>Films</h1>
+                <p>A movie manager.</p>
+                <ul>
+                    {% if authSecureAuthenticated %}
+                    <li style="margin-bottom: 10px;"><a href="{{ path_for('auth-secure-sign-out') }}">Ausloggen</a></li>
+                    <li><a href="{{ path_for('movies-secure') }}">Your movies</a></li>
+                    <li style="margin-bottom: 10px;"><a href="{{ path_for('movies-insecure') }}">Your movies (Insecure)</a></li>
+                    {% else %}
+                    <li style="margin-bottom: 10px;"><a href="{{ path_for('auth-secure-sign-in') }}">Login</a></li>
+                    {% endif %}
+                    <li><a href="">Dokumentation</a></li>
+                    <li><a href="">Journal</a></li>
+                </ul>
+            </div>
+            <div class="col-9" id="content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
 </body>
 
 <!-- JavaScript -->
+<script src="{{ base_url() }}assets/js/jquery.min.js"></script>
+<script src="{{ base_url() }}assets/js/tether.min.js"></script>
+<script src="{{ base_url() }}assets/js/bootbox.min.js"></script>
 <script src="{{ base_url() }}assets/js/bootstrap.min.js"></script>
+{% block javascript %}{% endblock %}
 
 </html>

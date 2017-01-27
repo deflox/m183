@@ -28,7 +28,7 @@ class AuthSecure extends Accessor
      *
      * @var string
      */
-    private $sessionName = 'user';
+    private $sessionName = 'userSecure';
 
     /**
      * Defines how many attempts a user can do before he gets locked out.
@@ -62,21 +62,20 @@ class AuthSecure extends Accessor
 
             // Check if user exists
             if (!isset($user)) {
-                $this->error = "Ihre E-Mail-Adresse oder Ihr Passwort ist nicht korrekt. Bitte versuchen Sie es noch einmal.";
+                $this->error = "Your credentials are not correct. Please try again.";
                 return false;
             }
 
             // Check password
             if (!password_verify($password, $user->password)) {
-                $this->error = "Ihre E-Mail-Adresse oder Ihr Passwort ist nicht korrekt. Bitte versuchen Sie es noch einmal.";
+                $this->error = "Your credentials are not correct. Please try again.";
                 return false;
             }
 
             // Set session
             $_SESSION[$this->sessionName] = [
                 'id' => $user->id,
-                'firstname' => $user->first_name,
-                'lastname' => $user->last_name,
+                'name' => $user->name,
             ];
 
             // Reset attempt if user logged in correctly
@@ -86,7 +85,7 @@ class AuthSecure extends Accessor
 
         } else {
 
-            $this->error = "Es gab bereits zuviele fehlgeschlagene Loginversuche. Bitte warten Sie ".$this->lockTime." Minuten und versuchen Sie es noch einmal.";
+            $this->error = "There were already to many failed login attempts. Please wait ".$this->lockTime." minutes und try again.";
             return false;
 
         }
@@ -180,7 +179,7 @@ class AuthSecure extends Accessor
             ->first();
 
         if (isset($user)) {
-            $this->error = "Es gibt bereits einen Benutzer mit der angegebenen E-Mail-Adresse. Bitte wählen Sie eine andere.";
+            $this->error = "There's already an user with the given email address.";
             return false;
         }
 
@@ -191,7 +190,7 @@ class AuthSecure extends Accessor
         $user->name = $data['name'];
 
         if (!$user->save()) {
-            $this->error = "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.";
+            $this->error = "An unknown error occured.";
             return false;
         }
 
@@ -211,7 +210,7 @@ class AuthSecure extends Accessor
         $token->user_id = $id;
 
         if (!$token->save()) {
-            $this->error = "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.";
+            $this->error = "An unknown error occured.";
             return '';
         }
 
@@ -231,13 +230,13 @@ class AuthSecure extends Accessor
             ->first();
 
         if (!isset($token)) {
-            $this->error = "Dieser Link ist ungültig oder abgelaufen.";
+            $this->error = "This link is invalid or expired.";
             return false;
         }
 
         if ($this->checkTimeStampAge($token->created_at, 120)) {
             $this->deleteToken($token->id);
-            $this->error = "Dieser Link ist ungültig oder abgelaufen.";
+            $this->error = "This link is invalid or expired.";
             return false;
         }
 
@@ -263,12 +262,12 @@ class AuthSecure extends Accessor
             ]);
 
         if (!$update) {
-            $this->error = "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.";
+            $this->error = "An unknown error occured.";
             return false;
         }
 
         if (!$this->deleteToken($token->id)) {
-            $this->error = "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.";
+            $this->error = "An unknown error occured.";
             return false;
         }
 
@@ -302,26 +301,6 @@ class AuthSecure extends Accessor
     public function getUserIdFromSession()
     {
         return $_SESSION[$this->sessionName]['id'];
-    }
-
-    /**
-     * Returns users firstname from the session.
-     *
-     * @return string
-     */
-    public function getUserFirstNameFromSession()
-    {
-        return $_SESSION[$this->sessionName]['firstname'];
-    }
-
-    /**
-     * Returns users lastname from the session.
-     *
-     * @return string
-     */
-    public function getUserLastNameFromSession()
-    {
-        return $_SESSION[$this->sessionName]['lastname'];
     }
 
     /**

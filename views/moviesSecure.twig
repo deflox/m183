@@ -1,0 +1,246 @@
+{% extends 'default.twig' %}
+
+{% block title %}Movies Secure{% endblock %}
+
+{% block content %}
+    <h1>Movies Secure</h1>
+    {% include 'partials/flash.twig' %}
+    <div class="clearfix" style="margin-bottom: 30px;">
+        <button class="btn btn-success float-right" id="add-movie">Add movie</button>
+    </div>
+
+    <div id="placeholder"></div>
+
+    {% if movies is not empty %}
+        {% for movie in movies %}
+            <div class="row movie-entry" id="movie_{{ movie.id }}">
+                <div class="col-4">
+                    <img src="{{ movie.image_url }}">
+                </div>
+                <div class="col-8">
+                    <h2>{{ movie.title }} <small>{{ movie.genres }}</small></h2>
+                    <p>
+                        {{ movie.plot }}
+                    </p>
+                    <div class="clearfix">
+                        <button class="btn btn-danger float-right" id="delete-movie" data-id="{{ movie.id }}">Delete</button>
+                    </div>
+                    <p><strong>Year:</strong> {{ movie.year }} | <strong>Runtime:</strong> {{ movie.runtime }} min</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No movies added yet.</p>
+    {% endif %}
+
+    <div id="movie-box">
+        <h3 id="movie-box-title">Add new movie</h3>
+        <div class="alert alert-danger" id="movie-box-global-form-error"></div>
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="IMDb Id" id="imdb_id">
+            <span class="input-group-btn">
+                <button class="btn btn-secondary" type="button" id="fetch">Fetch</button>
+            </span>
+        </div>
+        <div class="form-group" style="margin-top: 10px;">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" class="form-control">
+            <span class="input-error"></span>
+        </div>
+        <div class="form-group">
+            <label for="genres">Genres:</label>
+            <input type="text" id="genres" name="genres" class="form-control">
+            <span class="input-error"></span>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="year">Year:</label>
+                    <input type="text" id="year" name="year" class="form-control">
+                    <span class="input-error"></span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="runtime">Runtime:</label>
+                    <input type="text" id="runtime" name="runtime" class="form-control">
+                    <span class="input-error"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="plot">Plot:</label>
+            <textarea id="plot" name="plot" class="form-control" rows="10"></textarea>
+            <span class="input-error"></span>
+        </div>
+        <input type="hidden" id="image_url">
+    </div>
+{% endblock %}
+{% block javascript %}
+<script>
+
+    /**
+     * Creates global error message.
+     *
+     * @param message
+     */
+    function createGlobalError(message) {
+        var globalErrorContainer = $(".bootbox-body #movie-box-global-form-error");
+
+        globalErrorContainer.html(message);
+        globalErrorContainer.slideDown();
+    }
+
+    /**
+     * Adds a new movie.
+     *
+     * @param url
+     * @param title
+     * @param genre
+     * @param plot
+     * @param year
+     * @param runtime
+     */
+
+    function addMovie(url, title, genre, plot, year, runtime) {
+        $('#placeholder').after('<div class="row movie-entry"><div class="col-4"><img src="' + url + '"> </div> <div class="col-8"> <h2>' + title + ' <small>' + genre + '</small></h2> <p>' + plot + '</p> <p><div class="clearfix"><button class="btn btn-danger float-right" id="delete-movie">Delete</button> </div><strong>Year:</strong> ' + year + ' | <strong>Runtime:</strong> ' + runtime + ' min</p> </div> </div>');
+    }
+
+    $(document).on("click", "#add-movie", function(e) {
+
+        bootbox.dialog({
+            message: $("#movie-box").html(),
+            buttons: {
+                success: {
+                    label: "Add movie",
+                    className: "btn-success",
+                    callback: function() {
+
+                        var response;
+
+                        var fields = ["title", "genres", "year", "runtime", "plot"];
+
+                        var imdbId = $(".bootbox-body #imdb_id").val();
+                        var title = $(".bootbox-body #title").val();
+                        var genres = $(".bootbox-body #genres").val();
+                        var year = $(".bootbox-body #year").val();
+                        var runtime = $(".bootbox-body #runtime").val();
+                        var plot = $(".bootbox-body #plot").val();
+                        var url = $(".bootbox-body #image_url").val();
+
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            async: false,
+                            url: "{{ path_for('movies-secure-add-movie') }}",
+                            cache: false,
+                            data: {
+                                imdb_id: imdbId,
+                                title: title,
+                                genres: genres,
+                                year: year,
+                                runtime: runtime,
+                                plot: plot,
+                                image_url: url
+                            },
+                            success: function(data) {
+
+                                response = data;
+
+                            },
+                            complete: function() {
+                                button.prop('disabled', false);
+                                button.html('Add item');
+                            }
+
+                        });
+
+                        if (response.errors) {
+
+                            createGlobalError("Bitte füllen Sie alles aus.");
+
+                            /*
+                            for (var i=0; i < fields.length; i++) {
+                                if (fields[i] in response.messages) {
+                                    $("#"+fields[i]).parent().find(".input-error").html(response.messages[fields[i]][0]);
+                                } else {
+                                    $("#"+fields[i]).parent().find(".input-error").html("");
+                                }
+                            }
+                            */
+
+                            return false;
+
+                        }
+
+                        addMovie(url, title, genres, plot, year, runtime);
+                        return true;
+
+                    }
+                }
+            }
+        });
+
+    });
+
+    $(document).on("click", "#fetch", function(e) {
+
+        var button = $(".bootbox-body #fetch");
+        button.prop('disabled', true);
+        button.html('<i class="fa fa-refresh fa-spin"></i>');
+
+        $.ajax({
+            dataType: "json",
+            url: "http://www.omdbapi.com/?i=" + $(".bootbox-body #imdb_id").val() +"&?plot=short",
+            cache: false,
+            success: function(data) {
+                if (data.Response) {
+                    $(".bootbox-body #title").val(data.Title);
+                    $(".bootbox-body #genres").val(data.Genre);
+                    $(".bootbox-body #year").val(data.Year);
+                    $(".bootbox-body #runtime").val(data.Runtime.slice(0, -4));
+                    $(".bootbox-body #image_url").val(data.Poster);
+                    $(".bootbox-body #plot").html(data.Plot);
+                } else {
+                    createGlobalError("Unable to fetch data from IMDb.");
+                }
+
+            },
+            complete: function() {
+                button.prop('disabled', false);
+                button.html('Fetch');
+            }
+        });
+    });
+
+    $(document).on("click", "#delete-movie", function(e) {
+
+        var url = "{{ path_for('movies-secure-delete-movie', { 'id': 0 }) }}";
+        var id = $(this).attr("data-id");
+
+        var success = false;
+
+        if (confirm("Do you really want to delete this movie?")) {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                async: false,
+                url: url.slice(0,-1)+id,
+                cache: false,
+                success: function(response) {
+                    if (response.errors) {
+                        window.alert(response.message);
+                    } else {
+                        success = true;
+                    }
+                }
+            });
+        }
+
+        if (success)
+            $("#movie_"+id).remove();
+
+    });
+
+</script>
+{% endblock %}

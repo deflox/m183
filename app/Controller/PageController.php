@@ -21,6 +21,34 @@ class PageController extends Accessor
      */
     public function getIndex($req, $res)
     {
-        return $this->view->render($res, 'index.twig');
+        if (!$this->authSecure->isUserAuthenticated()) {
+            return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
+        } else {
+            return $res->withRedirect($this->router->pathFor('movies-secure'));
+        }
+    }
+
+    /**
+     * Displays the documentation page.
+     *
+     * @param  $req
+     * @param  $res
+     * @return \Slim\Views\Twig
+     */
+    public function getDocumentation($req, $res)
+    {
+        return null;
+    }
+
+    /**
+     * Displays the journal page.
+     *
+     * @param  $req
+     * @param  $res
+     * @return \Slim\Views\Twig
+     */
+    public function getJournal($req, $res)
+    {
+        return null;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Controller for handling authentication.
+ * Controller for handling secure authentication.
  *
  * @author Leo Rudin
  */
@@ -11,7 +11,7 @@ namespace App\Controller;
 use App\Accessor;
 use App\Models\User;
 
-class AuthController extends Accessor
+class AuthSecureController extends Accessor
 {
     /**
      * Displays the sign in page.
@@ -22,7 +22,7 @@ class AuthController extends Accessor
      */
     public function getSignIn($req, $res)
     {
-        return $this->view->render($res, 'auth/signin.twig');
+        return $this->view->render($res, 'authSecure/signin.twig');
     }
 
     /**
@@ -40,14 +40,15 @@ class AuthController extends Accessor
         ]);
 
         if ($validation->failed())
-            return $res->withRedirect($this->router->pathFor('auth-sign-in'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
 
         if (!$this->authSecure->signIn($req->getParam('email'), $req->getParam('password'), $req->getAttribute('ip_address'))) {
             $this->flash->addMessage('error', $this->authSecure->error());
-            return $res->withRedirect($this->router->pathFor('auth-sign-in'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
         }
 
-        return $res->withRedirect($this->router->pathFor('admin-dashboard'));
+        $this->flash->addMessage('success', 'Successfully logged in.');
+        return $res->withRedirect($this->router->pathFor('movies-secure'));
     }
 
     /**
@@ -59,7 +60,7 @@ class AuthController extends Accessor
      */
     public function getSignUp($req, $res)
     {
-        return $this->view->render($res, 'auth/signup.twig');
+        return $this->view->render($res, 'authSecure/signup.twig');
     }
 
     /**
@@ -71,27 +72,23 @@ class AuthController extends Accessor
      */
     public function postSignUp($req, $res)
     {
-        \Valitron\Validator::addRule('check_alpha', function($field, $value) {
-            return (preg_match("/^[A-Za-zöäüàéèê-]+$/", $value) === 1);
-        }, 'darf nur alphabetische Zeichen enthalten sowie ä,ö,ü,à,é,è,ê und -.');
-
         $validation = $this->validation->validate($req, [
-            'name|Name' => ['required', ['lengthMax', 75], 'check_alpha'],
+            'name|Name' => ['required', ['lengthMax', 75]],
             'email|E-Mail' => ['required', 'email', ['lengthMax', 75]],
             'password|Password' => ['required', ['equals', 'password_repeat']],
             'password_repeat|Repeated Password' => ['required']
         ]);
 
         if ($validation->failed())
-            return $res->withRedirect($this->router->pathFor('auth-sign-up'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-sign-up'));
 
         if (!$this->authSecure->signUp($req->getParams())) {
             $this->flash->addMessage('error', $this->authSecure->error());
-            return $res->withRedirect($this->router->pathFor('auth-sign-up'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-sign-up'));
         }
 
         $this->flash->addMessage('success', 'Signed up successfully.');
-        return $res->withRedirect($this->router->pathFor('auth-sign-in'));
+        return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
     }
 
     /**
@@ -103,7 +100,7 @@ class AuthController extends Accessor
      */
     public function getForgotPassword($req, $res)
     {
-        return $this->view->render($res, 'auth/forgot.twig');
+        return $this->view->render($res, 'authSecure/forgot.twig');
     }
 
     /**
@@ -120,7 +117,7 @@ class AuthController extends Accessor
         ]);
 
         if ($validation->failed())
-            return $res->withRedirect($this->router->pathFor('auth-forgot-password'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-forgot-password'));
 
         $user = User::where('email', $req->getParam('forgot_email'))
             ->get()
@@ -128,14 +125,14 @@ class AuthController extends Accessor
 
         if (!isset($user)) {
             $this->flash->addMessage('error', 'There is no user with the given email.');
-            return $res->withRedirect($this->router->pathFor('auth-forgot-password'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-forgot-password'));
         }
 
         $token = $this->authSecure->createForgotPasswordToken($user->id, $req->getParam('forgot_email'));
 
         if ($token === '') {
             $this->flash->addMessage('error', $this->authSecure->error());
-            return $res->withRedirect($this->router->pathFor('auth-forgot-password'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-forgot-password'));
         }
 
         $mail = $this->mail->init([
@@ -149,11 +146,11 @@ class AuthController extends Accessor
 
         if (!$mail->send()) {
             $this->flash->addMessage('error', 'An unknown error occurred. Please try again later.');
-            return $res->withRedirect($this->router->pathFor('auth-forgot-password'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-forgot-password'));
         }
 
-        $this->flash->addMessage('success', 'An unknown error occurred. Please try again later.');
-        return $res->withRedirect($this->router->pathFor('auth-sign-in'));
+        $this->flash->addMessage('success', 'An E-Mail was sent to the given E-Mail address.');
+        return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
     }
 
     /**
@@ -168,10 +165,10 @@ class AuthController extends Accessor
     {
         if (!$this->authSecure->checkToken($args['token'])) {
             $this->flash->addMessage('error', $this->authSecure->error());
-            return $res->withRedirect($this->router->pathFor('auth-sign-in'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
         }
 
-        return $this->view->render($res, 'auth/reset.twig', [
+        return $this->view->render($res, 'authSecure/reset.twig', [
             'token' => $args['token']
         ]);
     }
@@ -187,7 +184,7 @@ class AuthController extends Accessor
     {
         if (!$this->authSecure->checkToken($args['token'])) {
             $this->flash->addMessage('error', $this->authSecure->error());
-            return $res->withRedirect($this->router->pathFor('auth-sign-in'));
+            return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
         }
 
         $validation = $this->validation->validate($req, [
@@ -196,15 +193,15 @@ class AuthController extends Accessor
         ]);
 
         if ($validation->failed())
-            return $res->withRedirect($this->router->pathFor('auth-reset-password', ['token' => $args['token']]));
+            return $res->withRedirect($this->router->pathFor('auth-secure-reset-password', ['token' => $args['token']]));
 
         if (!$this->authSecure->resetPassword($args['token'], $req->getParam('password'))) {
             $this->flash->addMessage('error', $this->authSecure->error());
-            return $res->withRedirect($this->router->pathFor('auth-reset-password', ['token' => $args['token']]));
+            return $res->withRedirect($this->router->pathFor('auth-secure-reset-password', ['token' => $args['token']]));
         }
 
         $this->flash->addMessage('success', 'You changed your password successfully. You can now sign in.');
-        return $res->withRedirect($this->router->pathFor('auth-sign-in'));
+        return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
     }
 
     /**
@@ -218,6 +215,6 @@ class AuthController extends Accessor
     {
         $this->authSecure->signOut();
         $this->flash->addMessage('success', 'Erfolgreich ausgeloggt.');
-        return $res->withRedirect($this->router->pathFor('auth-sign-in'));
+        return $res->withRedirect($this->router->pathFor('auth-secure-sign-in'));
     }
 }

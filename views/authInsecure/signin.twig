@@ -1,0 +1,24 @@
+{% extends 'default.twig' %}
+
+{% block title %}Sign in{% endblock %}
+
+{% block content %}
+    <h1>Sign in</h1>
+    <p>Please sign in to access your saved movies.</p>
+    {% include 'partials/flash.twig' %}
+    <form action="" method="post">
+        <div class="form-group">
+            <label for="email">E-Mail:</label>
+            <input type="email" name="email" id="email" class="form-control" value="{{ old['email'] }}">
+            <span class="input-error">{{ errors['email']|first }}</span>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" class="form-control">
+            <span class="input-error">{{ errors['password']|first }}</span>
+        </div>
+        <div class="clearfix">
+            <input type="submit" class="btn btn-primary float-right" value="Sign in">
+        </div>
+    </form>
+{% endblock %}

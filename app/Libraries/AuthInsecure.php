@@ -25,7 +25,7 @@ class AuthInsecure extends Accessor
      *
      * @var string
      */
-    private $sessionName = 'user';
+    private $sessionName = 'userInsecure';
 
     /**
      * Signs the user in. Returns true if process was successful.

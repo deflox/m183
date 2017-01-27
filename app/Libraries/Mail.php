@@ -17,14 +17,7 @@ class Mail extends Accessor
      *
      * @var string
      */
-    private $from = 'noreply@thvm.ch';
-
-    /**
-     * Defines to which address the users answer if they hit the answer-button.
-     *
-     * @var string
-     */
-    private $replyTo = 'support@thvm.ch';
+    private $from = 'm183@rudin.cc';
 
     /**
      * Contains array with required data for sending the mail.
@@ -70,7 +63,6 @@ class Mail extends Accessor
 
         // Content
         $this->phpmailer->setFrom($this->from);
-        $this->phpmailer->addReplyTo($this->replyTo);
         $this->phpmailer->addAddress($this->data['to']);
         $this->phpmailer->Subject = $this->data['subject'];
 

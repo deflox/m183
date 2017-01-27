@@ -1,0 +1,83 @@
+/*
+ * General stuff
+ */
+body {
+    background-color: #fafafa;
+}
+button, input[type=submit] {
+    cursor: pointer;
+}
+
+/*
+ * Content
+ */
+#wrapper {
+    background-color: #34495e;
+}
+#wrapper div {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+#wrapper #menu {
+    font-family: 'Bitter', serif;
+    color: #ecf0f1;
+}
+#wrapper #menu h1 {
+    font-size: 5em;
+    margin-top: 50px;
+}
+#wrapper #menu p {
+    font-size: 1.1em;
+    padding-bottom: 50px;
+}
+#wrapper #menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+#wrapper #menu ul li a,
+#wrapper #menu ul li a:active:visited {
+    color: #ecf0f1;
+    text-decoration: none;
+}
+#wrapper #content {
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: white;
+    border-right: 1px solid #E1E1E1;
+    border-left: 1px solid #E1E1E1;
+}
+#wrapper #content h1 {
+    font-family: 'Bitter', serif;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 3.5em;
+}
+#wrapper #content p {
+    font-size: 1.2em;
+}
+
+#movie-box {
+    display: none;
+}
+#movie-box-title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+#movie-box-global-form-error {
+    display: none;
+}
+
+.movie-entry {
+    border-bottom: 1px solid #E1E1E1;
+}
+.movie-entry img {
+    width: 200px;
+}
+
+/*
+ * Input fields
+ */
+.input-error {
+    color: #e74c3c;
+}

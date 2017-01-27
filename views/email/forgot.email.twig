@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        h1 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Passwort vergessen</h1>
+<p>Guten Tag {{ user.first_name }} {{ user.last_name }}</p>
+<p>
+    Sie haben kürzlich auf thvm.ch einen Link zum Zurücksetzen Ihres Passworts angefordert. Klicken
+    Sie daher bitte auf den Link unten, um Ihr Passwort zurückzusetzen:
+</p>
+<a href="{{ base_url() }}auth/secure/reset/{{ token }}">{{ base_url() }}auth/secure/reset/{{ token }}</a>
+<p>
+    Sofern Sie diesen Link <strong>nicht</strong> angefordert haben, ignorieren Sie dieses E-Mail und wenden Sie sich
+    bei Bedarf an support@thvm.ch.
+</p>
+<small>
+    <strong>Hinweis:</strong> Dieser Link ist zwei Stunden gültig.
+</small>
+</body>
+</html>
